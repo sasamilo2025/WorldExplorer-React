@@ -1,5 +1,8 @@
+import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import Home from "./pages/Home";
+import Countries from "./pages/Countries";
 import "./App.css";
 
 function App() {
@@ -7,12 +10,10 @@ function App() {
         <>
             <Navbar />
 
-            <main className="container mt-4">
-                <h1>🌎 World Explorer</h1>
-                <p>
-                    Explore countries around the world.
-                </p>
-            </main>
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/countries" element={<Countries />} />
+            </Routes>
 
             <Footer />
         </>
