@@ -29,10 +29,10 @@ function Favorites({ favorites, removeFavorite }) {
 
             {/* Display each favorite country */}
             {favorites.map((country) => (
-                <div key={country} className="mb-2">
+                <div key={country.name} className="mb-2">
 
                     {/* Display the country name */}
-                    <span>{country}</span>
+                    <span>{country.name}</span>
 
                     {/* Remove the selected country */}
                     <button
