@@ -1,15 +1,24 @@
     import { useEffect, useState } from "react";
     import { getCountries } from "../services/countryService";
+    import CountryCard from "../components/CountryCard";
 
     function Countries({ addFavorite }) {
     // Stores the country data received from the API.
     // It starts as an empty array because the API
     // has not returned any countries yet.
     const [countries, setCountries] = useState([]);
+
+    // Stores the text entered by the user in the country search box.
+    // It starts empty so all countries are displayed initially.
+    const [searchTerm, setSearchTerm] = useState("");
     
     // Runs when the Countries page loads.
     // It asks our service to retrieve the country data
     // from the external API.
+    //
+    //to identify countries properties
+    console.log("COUNTRY DATA:", countries);
+    //
     useEffect(() => {
 
         getCountries()
@@ -29,33 +38,72 @@
     // Countries only needs to request that a country
     // be added to that shared list.
 
+    // Creates the list of countries that should be displayed.
+    // The original countries array remains unchanged.
+    // Search is only applied when the user has entered 3 or more characters.
+
+    const filteredCountries =
+    searchTerm.length >= 3
+        ? countries.filter((country) =>
+              country.name
+                  .toLowerCase()
+                  .startsWith(searchTerm.toLowerCase())
+          )
+        : countries;
+
     return (
         <section className="container mt-4">
 
             {/* Page heading */}
-            <h1>🌎 Explore Countries</h1>
+            <h1>Explore Countries</h1>
 
             <p>
                 Discover countries from around the world.
             </p>
 
-            {/* Display our temporary country list */}
-            {countries.map((country) => (
-                <div key={country.name} className="mb-2">
+            <div className="mb-4">
+             <input
+                 type="text"
+                 className="form-control w-50"
+                 placeholder="Search for a country..."
+                 value={searchTerm}
+                 onChange={(event) => setSearchTerm(event.target.value)}
+             />
+            </div>
 
-                    {/* Display country name */}
-                    <span>{country.name}</span>
+            {/* Display each country using our reusable CountryCard */}
+            <div className="row g-4">
+                {filteredCountries.map((country) => {
+              console.log("COUNTRY:", country.name);
+              console.log("FLAGS OBJECT:", country.flags);
+              console.log("SVG FLAG URL:", country.flags.svg);
+              console.log("CAPITAL:", country.capital);
+              console.log("REGION:", country.region);
+              console.log("POPULATION:", country.population);
+              console.log("CURRENCIES:", country.currencies);
+              console.log("CURRENCIES:", country.currencies);
+              console.log("CURRENCIES JSON:", JSON.stringify(country.currencies));
+              
+              console.log("CURRENCY CODE:", country.currencies?.[0]?.code);
+              console.log("CURRENCY NAME:", country.currencies?.[0]?.name);
+              console.log("CURRENCY SYMBOL:", country.currencies?.[0]?.symbol);
 
-                    {/* Add the selected country to Favorites */}
-                    <button
-                        onClick={() => addFavorite(country)}
-                        className="btn btn-primary btn-sm ms-2"
-                    >
-                        ❤️ Favorite
-                    </button>
+      // Return the JSX for each country
+    return (
+        <div
+            key={country.name}
+            className="col-md-4"
+        >
+            <CountryCard
+                country={country}
+                addFavorite={addFavorite}
+            />
+        </div>
+        );
+                
+         })}
 
-                </div>
-            ))}
+        </div>
 
         </section>
     );

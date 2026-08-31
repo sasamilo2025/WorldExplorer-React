@@ -10,7 +10,7 @@
 // --------------------------------------------------
 
 const COUNTRIES_API_URL =
-    "https://countries.dev/countries?fields=name,capital,region,population,flags";
+    "https://countries.dev/countries?fields=name,capital,region,population,flags,currencies";
 
 // --------------------------------------------------
 // GET COUNTRIES
