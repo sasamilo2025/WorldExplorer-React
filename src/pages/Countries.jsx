@@ -1,112 +1,99 @@
-    import { useEffect, useState } from "react";
-    import { getCountries } from "../services/countryService";
-    import CountryCard from "../components/CountryCard";
+import { useEffect, useState } from "react";
+import { getCountries } from "../services/countryService";
+import CountryCard from "../components/CountryCard";
 
-    function Countries({ addFavorite }) {
-    // Stores the country data received from the API.
-    // It starts as an empty array because the API
-    // has not returned any countries yet.
-    const [countries, setCountries] = useState([]);
+function Countries({ addFavorite }) {
+  // Stores the country data received from the API.
+  // It starts as an empty array because the API
+  // has not returned any countries yet.
+  const [countries, setCountries] = useState([]);
 
-    // Stores the text entered by the user in the country search box.
-    // It starts empty so all countries are displayed initially.
-    const [searchTerm, setSearchTerm] = useState("");
-    
-    // Runs when the Countries page loads.
-    // It asks our service to retrieve the country data
-    // from the external API.
-    //
-    //to identify countries properties
-    console.log("COUNTRY DATA:", countries);
-    //
-    useEffect(() => {
+  // Stores the text entered by the user in the country search box.
+  // It starts empty so all countries are displayed initially.
+  const [searchTerm, setSearchTerm] = useState("");
 
-        getCountries()
-            .then((data) => {
-                // Store the API results in React state.
-                setCountries(data);
-            })
-            .catch((error) => {
-                // Display any API error in the browser console.
-                console.error("Error loading countries:", error);
-            });
+  // Runs when the Countries page loads.
+  // It asks our service to retrieve the country data
+  // from the external API.
+  //
+  //to identify countries properties
+  console.log("COUNTRY DATA:", countries);
+  //
+  useEffect(() => {
+    getCountries()
+      .then((data) => {
+        // Store the API results in React state.
+        setCountries(data);
+      })
+      .catch((error) => {
+        // Display any API error in the browser console.
+        console.error("Error loading countries:", error);
+      });
+  }, []);
 
-    }, []);
+  // Receive the addFavorite function from App.jsx.
+  // App owns the actual favorites state.
+  // Countries only needs to request that a country
+  // be added to that shared list.
 
-    // Receive the addFavorite function from App.jsx.
-    // App owns the actual favorites state.
-    // Countries only needs to request that a country
-    // be added to that shared list.
+  // Creates the list of countries that should be displayed.
+  // The original countries array remains unchanged.
+  // Search is only applied when the user has entered 3 or more characters.
 
-    // Creates the list of countries that should be displayed.
-    // The original countries array remains unchanged.
-    // Search is only applied when the user has entered 3 or more characters.
-
-    const filteredCountries =
+  const filteredCountries =
     searchTerm.length >= 3
-        ? countries.filter((country) =>
-              country.name
-                  .toLowerCase()
-                  .startsWith(searchTerm.toLowerCase())
-          )
-        : countries;
+      ? countries.filter((country) =>
+          country.name.toLowerCase().startsWith(searchTerm.toLowerCase()),
+        )
+      : countries;
 
-    return (
-        <section className="container mt-4">
+  return (
+    <section className="container mt-4">
+      {/* Page heading */}
+      <h1 className="display-5 fw-bold text-dark mb-1">Explore Countries 🌍</h1>
 
-            {/* Page heading */}
-            <h1>Explore Countries</h1>
+      {/* Page description */}
+      <p className="lead mb-4" style={{ fontWeight: "700" }}>
+        Discover countries from around the world.
+      </p>
 
-            <p>
-                Discover countries from around the world.
-            </p>
+      <div className="mb-4">
+        <input
+          type="text"
+          className="form-control w-50"
+          placeholder="Search for a country..."
+          value={searchTerm}
+          onChange={(event) => setSearchTerm(event.target.value)}
+        />
+      </div>
 
-            <div className="mb-4">
-             <input
-                 type="text"
-                 className="form-control w-50"
-                 placeholder="Search for a country..."
-                 value={searchTerm}
-                 onChange={(event) => setSearchTerm(event.target.value)}
-             />
+      {/* Display each country using our reusable CountryCard */}
+      <div className="row g-4">
+        {filteredCountries.map((country) => {
+          console.log("COUNTRY:", country.name);
+          console.log("FLAGS OBJECT:", country.flags);
+          console.log("SVG FLAG URL:", country.flags.svg);
+          console.log("CAPITAL:", country.capital);
+          console.log("REGION:", country.region);
+          console.log("POPULATION:", country.population);
+          console.log("CURRENCIES:", country.currencies);
+          console.log("CURRENCIES:", country.currencies);
+          console.log("CURRENCIES JSON:", JSON.stringify(country.currencies));
+
+          console.log("CURRENCY CODE:", country.currencies?.[0]?.code);
+          console.log("CURRENCY NAME:", country.currencies?.[0]?.name);
+          console.log("CURRENCY SYMBOL:", country.currencies?.[0]?.symbol);
+
+          // Return the JSX for each country
+          return (
+            <div key={country.name} className="col-md-4">
+              <CountryCard country={country} addFavorite={addFavorite} />
             </div>
-
-            {/* Display each country using our reusable CountryCard */}
-            <div className="row g-4">
-                {filteredCountries.map((country) => {
-              console.log("COUNTRY:", country.name);
-              console.log("FLAGS OBJECT:", country.flags);
-              console.log("SVG FLAG URL:", country.flags.svg);
-              console.log("CAPITAL:", country.capital);
-              console.log("REGION:", country.region);
-              console.log("POPULATION:", country.population);
-              console.log("CURRENCIES:", country.currencies);
-              console.log("CURRENCIES:", country.currencies);
-              console.log("CURRENCIES JSON:", JSON.stringify(country.currencies));
-              
-              console.log("CURRENCY CODE:", country.currencies?.[0]?.code);
-              console.log("CURRENCY NAME:", country.currencies?.[0]?.name);
-              console.log("CURRENCY SYMBOL:", country.currencies?.[0]?.symbol);
-
-      // Return the JSX for each country
-    return (
-        <div
-            key={country.name}
-            className="col-md-4"
-        >
-            <CountryCard
-                country={country}
-                addFavorite={addFavorite}
-            />
-        </div>
-        );
-                
-         })}
-
-        </div>
-
-        </section>
-    );
+          );
+        })}
+      </div>
+    </section>
+  );
 }
 
 export default Countries;
