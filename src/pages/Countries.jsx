@@ -6,18 +6,17 @@ function Countries({ addFavorite }) {
   // Stores the country data received from the API.
   // It starts as an empty array because the API
   // has not returned any countries yet.
+  // this useState is updated when the API returns data.
   const [countries, setCountries] = useState([]);
 
   // Stores the text entered by the user in the country search box.
   // It starts empty so all countries are displayed initially.
+  // this useState is updated whenever the user types in the search box.
   const [searchTerm, setSearchTerm] = useState("");
 
   // Runs when the Countries page loads.
   // It asks our service to retrieve the country data
   // from the external API.
-  //
-  //to identify countries properties
-  console.log("COUNTRY DATA:", countries);
   //
   useEffect(() => {
     getCountries()
@@ -70,20 +69,7 @@ function Countries({ addFavorite }) {
       {/* Display each country using our reusable CountryCard */}
       <div className="row g-4">
         {filteredCountries.map((country) => {
-          console.log("COUNTRY:", country.name);
-          console.log("FLAGS OBJECT:", country.flags);
-          console.log("SVG FLAG URL:", country.flags.svg);
-          console.log("CAPITAL:", country.capital);
-          console.log("REGION:", country.region);
-          console.log("POPULATION:", country.population);
-          console.log("CURRENCIES:", country.currencies);
-          console.log("CURRENCIES:", country.currencies);
-          console.log("CURRENCIES JSON:", JSON.stringify(country.currencies));
-
-          console.log("CURRENCY CODE:", country.currencies?.[0]?.code);
-          console.log("CURRENCY NAME:", country.currencies?.[0]?.name);
-          console.log("CURRENCY SYMBOL:", country.currencies?.[0]?.symbol);
-
+          // Each country is displayed in a column.
           // Return the JSX for each country
           return (
             <div key={country.name} className="col-md-4">
